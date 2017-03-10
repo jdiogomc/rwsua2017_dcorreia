@@ -14,6 +14,7 @@ int main()
 #include <rwsua2017_libs/player.h>
 #include <rwsua2017_msgs/MakeAPlay.h>
 #include "ros/ros.h"
+#include <tf/transform_broadcaster.h>
 #include "std_msgs/String.h"
 #include <boost/make_shared.hpp>
 
@@ -64,6 +65,9 @@ namespace rwsua2017{
 		public:
 		//ros::NodeHandle n;
 		ros::Subscriber sub;
+		tf::TransformBroadcaster br;
+
+		tf::Transform t1;
 /*
 		vector<string> red_team;
 		vector<string> green_team;
@@ -104,6 +108,14 @@ namespace rwsua2017{
 					cout << "I'm not in any team :(" << endl;
 			}
 */
+
+			t1.setOrigin(tf::Vector3(1,1,0));
+			tf::Quaternion q;
+			q.setRPY(0,0,0);
+			t1.setRotation(q);
+			br.sendTransform(tf::StampedTransform(t1, ros::Time::now(),"map",name));
+
+		
 			cout << endl;
 
 			sub = n.subscribe("/make_a_play",1000, &MyPlayer::makeAPlay,this);
@@ -123,6 +135,21 @@ namespace rwsua2017{
 		{
 		  cout << "received a makeAPlay msg" << endl;
 			cout << "max_dispalcemente: " << msg->max_displacement << endl; 
+
+			float turn_angle = M_PI/10;
+			float displacement = 0.5;
+
+			tf::Transform tmov;
+			tf::Quaternion q;
+			q.setRPY(0,0,turn_angle);
+
+			tmov.setRotation(q);
+			tmov.setOrigin(tf::Vector3(displacement,0,0));
+
+			tf::Transform t = t1 * tmov;
+
+			br.sendTransform(tf::StampedTransform(t1, ros::Time::now(),"map",name));
+			t1 = t;
 		}
 /*
 		bool isMyTeam(vector<string> team, string teamName){
