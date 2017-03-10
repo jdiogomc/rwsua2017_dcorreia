@@ -19,6 +19,9 @@ int main()
 #include "std_msgs/String.h"
 #include <boost/make_shared.hpp>
 
+
+#define MAX_ANGLE M_PI/30
+
 double randNumber(){
 		struct timeval t1;
 		gettimeofday(&t1,NULL);
@@ -153,7 +156,10 @@ namespace rwsua2017{
 
 			tf::Transform tmov;
 			tf::Quaternion q;
-			q.setRPY(0,0,getAngleFromTo(name, "moliveira"));
+			double angle = getAngleFromTo(name, "player_moliveira");
+			if(angle > MAX_ANGLE){ angle = MAX_ANGLE;}
+			if(angle < -MAX_ANGLE){ angle = -MAX_ANGLE;}
+			q.setRPY(0,0,angle);
 
 			tmov.setRotation(q);
 			tmov.setOrigin(tf::Vector3(displacement,0,0));
@@ -169,7 +175,7 @@ double getAngleFromTo(string myPlayer, string player){
 	tf::StampedTransform transform;
 
 	 try{
-     listener.lookupTransform(player, myPlayer,
+     listener.lookupTransform(myPlayer, player,
 															ros::Time(0),transform);
     }
     catch (tf::TransformException ex){
