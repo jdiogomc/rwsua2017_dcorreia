@@ -13,6 +13,8 @@ int main()
 #include <boost/shared_ptr.hpp> 
 #include <rwsua2017_libs/player.h>
 #include <rwsua2017_msgs/MakeAPlay.h>
+#include "ros/ros.h"
+#include "std_msgs/String.h"
 
 using namespace std;
                                                
@@ -59,8 +61,14 @@ namespace rwsua2017{
 	class MyPlayer: public Player{
 	
 		public:
+		ros::NodeHandle n;
+
+		ros::Subscriber sub;
+
 		MyPlayer(string name, string team): Player(name, team){
 			cout << "Inicialized MyPlayer" << endl;
+
+			sub = n.subscribe("/make_a_play",1000, &MyPlayer::makeAPlay,this);
 		}
 		
 		vector<string> teamMates;
@@ -70,13 +78,22 @@ namespace rwsua2017{
 			cout << teamMates[i] << endl;
 		    }
 		}
+
+		void makeAPlay(const rwsua2017_msgs::MakeAPlay::ConstPtr& msg)
+		{
+		  cout << "received a makeAPlay msg" << endl;
+			cout << "max_dispalcemente: " << msg->max_displacement << endl; 
+		}
 	};
 }
 
+
 using namespace rwsua2017;
 
-int main()
+int main(int argc, char **argv)
 {
+
+    ros::init(argc,argv,"player_dcorreia");
 //Creating an instance of class Player
     MyPlayer player("dcorreia","blue");
     //player.setTeamName("red");
@@ -91,5 +108,7 @@ int main()
 
     vector< boost::shared_ptr<Player> > teamMates;
 
+
+    ros::spin();
     return 1;
 }
