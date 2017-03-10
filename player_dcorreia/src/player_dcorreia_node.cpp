@@ -10,11 +10,13 @@ int main()
 
 #include <iostream>
 #include <vector>
-#include <boost/shared_ptr.hpp>  
+#include <boost/shared_ptr.hpp> 
+#include <rwsua2017_libs/player.h>
 
 using namespace std;
                                                
 namespace rwsua2017{
+#if 0
 	class Player
 	{
 	    public:
@@ -52,7 +54,7 @@ namespace rwsua2017{
 	    private:
 		string team;
 	};
-	
+#endif
 	class MyPlayer: public Player{
 	
 		public:
@@ -79,7 +81,7 @@ int main()
     //player.setTeamName("red");
 
     cout << "player.name is " << player.name << endl;
-    cout << "team is " << player.getTeam() << endl;
+    cout << "team is " << player.get_team_name() << endl;
 
     player.teamMates.push_back("fsilva");
     player.teamMates.push_back("vsilva");
