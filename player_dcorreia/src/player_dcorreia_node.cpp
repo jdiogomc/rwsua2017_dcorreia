@@ -18,6 +18,15 @@ int main()
 #include "std_msgs/String.h"
 #include <boost/make_shared.hpp>
 
+double randNumber(){
+		struct timeval t1;
+		gettimeofday(&t1,NULL);
+		srand(t1.tv_usec);
+		double x =((((double)rand()/(double)RAND_MAX)*2 -1)*5);
+
+		return x;
+}
+
 using namespace std;
                                                
 namespace rwsua2017{
@@ -109,16 +118,16 @@ namespace rwsua2017{
 			}
 */
 
-			t1.setOrigin(tf::Vector3(1,1,0));
+			t1.setOrigin(tf::Vector3(randNumber(),randNumber(),0));
 			tf::Quaternion q;
-			q.setRPY(0,0,0);
+			q.setRPY(0,0,randNumber());
 			t1.setRotation(q);
 			br.sendTransform(tf::StampedTransform(t1, ros::Time::now(),"map",name));
 
 		
 			cout << endl;
 
-			sub = n.subscribe("/make_a_play",1000, &MyPlayer::makeAPlay,this);
+			sub = n.subscribe("/make_a_play/dog",1000, &MyPlayer::makeAPlay,this);
 
 			cout << "Inicialized MyPlayer" << endl;
 		}
@@ -137,7 +146,7 @@ namespace rwsua2017{
 			cout << "max_dispalcemente: " << msg->max_displacement << endl; 
 
 			float turn_angle = M_PI/10;
-			float displacement = 0.5;
+			float displacement = msg->max_displacement;
 
 			tf::Transform tmov;
 			tf::Quaternion q;
