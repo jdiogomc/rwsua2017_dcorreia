@@ -28,25 +28,6 @@ double randNumber(){
 		return x;
 }
 
-double getAngleFromTo(string myPlayer, string player){
-
-	tf::TransformListener listener;
-	tf::StampedTransform transform;
-
-	 try{
-     listener.lookupTransform(myPlayer, player,
-															ros::Time(0),transform);
-    }
-    catch (tf::TransformException ex){
-      ROS_ERROR("%s",ex.what());
-      //ros::Duration(1.0).sleep();
-    }
-
-		double anglle = atan2(transform.getOrigin().y(),
-                          transform.getOrigin().x());
-
-		return anglle;
-}
 
 using namespace std;
                                                
@@ -98,6 +79,7 @@ namespace rwsua2017{
 		tf::TransformBroadcaster br;
 
 		tf::Transform t1;
+		tf::TransformListener listener;
 /*
 		vector<string> red_team;
 		vector<string> green_team;
@@ -181,6 +163,26 @@ namespace rwsua2017{
 			br.sendTransform(tf::StampedTransform(t1, ros::Time::now(),"map",name));
 			t1 = t;
 		}
+
+double getAngleFromTo(string myPlayer, string player){
+
+	tf::StampedTransform transform;
+
+	 try{
+     listener.lookupTransform(player, myPlayer,
+															ros::Time(0),transform);
+    }
+    catch (tf::TransformException ex){
+      ROS_ERROR("%s",ex.what());
+      //ros::Duration(1.0).sleep();
+    }
+
+		double anglle = atan2(transform.getOrigin().y(),
+                          transform.getOrigin().x());
+
+		return anglle;
+}
+
 /*
 		bool isMyTeam(vector<string> team, string teamName){
 				for(int i = 0; i<team.size();i++){
