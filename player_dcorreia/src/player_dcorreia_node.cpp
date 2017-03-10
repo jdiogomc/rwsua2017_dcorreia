@@ -15,6 +15,7 @@ int main()
 #include <rwsua2017_msgs/MakeAPlay.h>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include <boost/make_shared.hpp>
 
 using namespace std;
                                                
@@ -61,21 +62,60 @@ namespace rwsua2017{
 	class MyPlayer: public Player{
 	
 		public:
-		ros::NodeHandle n;
-
+		//ros::NodeHandle n;
 		ros::Subscriber sub;
-
+/*
+		vector<string> red_team;
+		vector<string> green_team;
+		vector<string> blue_team;
+		boost::shared_ptr<vector<string> > my_team;
+		boost::shared_ptr<vector<string> > preys_team;
+		boost::shared_ptr<vector<string> > hunters_team;
+*/
 		MyPlayer(string name, string team): Player(name, team){
-			cout << "Inicialized MyPlayer" << endl;
+/*			//ler parametros com lista de jogadores
+			n.getParam("red",red_team);
+			n.getParam("green",green_team);
+			n.getParam("blue",blue_team);
+			
+			cout << "Red Team:" << endl;
+			for(int i = 0; i<red_team.size();i++){
+					cout << red_team[i] << endl;
+			}
+
+			cout << endl << "Green Team:" << endl;
+			for(int i = 0; i<red_team.size();i++){
+					cout << green_team[i] << endl;
+			}
+
+			cout << endl << "Blue Team:" << endl;
+			for(int i = 0; i<red_team.size();i++){
+					cout << blue_team[i] << endl;
+			}
+			cout << endl;		
+	
+			if (isMyTeam(red_team, "red_team")){
+
+			}else if(isMyTeam(blue_team, "blue_team")){
+
+			}else if(isMyTeam(green_team, "green_team")){
+
+			}else{
+					cout << "I'm not in any team :(" << endl;
+			}
+*/
+			cout << endl;
 
 			sub = n.subscribe("/make_a_play",1000, &MyPlayer::makeAPlay,this);
+
+			cout << "Inicialized MyPlayer" << endl;
 		}
-		
+
 		vector<string> teamMates;
 
 		void printTeamMates(){
 		    for(size_t i = 0; i<teamMates.size(); i++){
-			cout << teamMates[i] << endl;
+						cout << teamMates[i] << endl;
 		    }
 		}
 
@@ -84,6 +124,17 @@ namespace rwsua2017{
 		  cout << "received a makeAPlay msg" << endl;
 			cout << "max_dispalcemente: " << msg->max_displacement << endl; 
 		}
+/*
+		bool isMyTeam(vector<string> team, string teamName){
+				for(int i = 0; i<team.size();i++){
+						if(team[i] == name){
+							cout << "My Team is " << teamName << endl;
+							return true;
+						}
+				}
+				return false;
+		}
+*/
 	};
 }
 
