@@ -15,6 +15,7 @@ int main()
 #include <rwsua2017_msgs/MakeAPlay.h>
 #include "ros/ros.h"
 #include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
 #include "std_msgs/String.h"
 #include <boost/make_shared.hpp>
 
@@ -25,6 +26,26 @@ double randNumber(){
 		double x =((((double)rand()/(double)RAND_MAX)*2 -1)*5);
 
 		return x;
+}
+
+double getAngleFromTo(string myPlayer, string player){
+
+	tf::TransformListener listener;
+	tf::StampedTransform transform;
+
+	 try{
+     listener.lookupTransform(myPlayer, player,
+															ros::Time(0),transform);
+    }
+    catch (tf::TransformException ex){
+      ROS_ERROR("%s",ex.what());
+      //ros::Duration(1.0).sleep();
+    }
+
+		double anglle = atan2(transform.getOrigin().y(),
+                          transform.getOrigin().x());
+
+		return anglle;
 }
 
 using namespace std;
@@ -150,7 +171,7 @@ namespace rwsua2017{
 
 			tf::Transform tmov;
 			tf::Quaternion q;
-			q.setRPY(0,0,turn_angle);
+			q.setRPY(0,0,getAngleFromTo(name, "moliveira"));
 
 			tmov.setRotation(q);
 			tmov.setOrigin(tf::Vector3(displacement,0,0));
