@@ -12,6 +12,7 @@ int main()
 #include <vector>
 #include <boost/shared_ptr.hpp> 
 #include <rwsua2017_libs/player.h>
+#include <rwsua2017_msgs/MakeAPlay.h>
 
 using namespace std;
                                                
