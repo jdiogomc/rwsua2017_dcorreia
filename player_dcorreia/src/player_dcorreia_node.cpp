@@ -156,7 +156,7 @@ namespace rwsua2017{
 
 			tf::Transform tmov;
 			tf::Quaternion q;
-			double angle = getAngleFromTo(name, "player_moliveira");
+			double angle = getAngleFromTo(name,"moliveira");
 			if(angle > MAX_ANGLE){ angle = MAX_ANGLE;}
 			if(angle < -MAX_ANGLE){ angle = -MAX_ANGLE;}
 			q.setRPY(0,0,angle);
