@@ -171,7 +171,7 @@ namespace rwsua2017{
 					}
 			}
 
-			int safedist = 2;
+			int safedist = 1.5;
 			double angleC;
 			if(mindistH < safedist){
 					if(msg->green_alive.size() > 0){
@@ -181,6 +181,11 @@ namespace rwsua2017{
 					}else{
 						angleC = MAX_ANGLE;
 					}
+
+
+				if(checkLimits()){
+						angleC = M_PI/40;
+				}
 			}else{
 				double mindist = 1000000;
 				int idx = 0;
@@ -201,6 +206,7 @@ namespace rwsua2017{
 					}
 			}
 
+			
 
 			move(displacement, angleC, displacement, MAX_ANGLE);
 
@@ -267,11 +273,41 @@ double getDistFromTo(string from, string to){
     }
 
 
-			double x = transform.getOrigin().x();
+				double x = transform.getOrigin().x();
         double y = transform.getOrigin().y();
         dist = sqrt(x*x + y*y);
 
 	return dist;
+}
+
+
+bool checkLimits(){
+
+	tf::StampedTransform transform;
+	ros::Time now = ros::Time(0);
+	float time_to_wait = 0.1;
+	double dist = 0;
+	 try{
+			listener.waitForTransform("/map",name,now, ros::Duration(time_to_wait));
+     listener.lookupTransform("/map", name,
+															now,transform);
+    }
+    catch (tf::TransformException ex){
+      ROS_ERROR("%s",ex.what());
+      //ros::Duration(1.0).sleep();
+    }
+
+
+		double x = transform.getOrigin().x();
+    double y = transform.getOrigin().y();
+
+		double safedist = 1.5;
+
+		if(abs(x) > 5-safedist  ||  abs(y) > 5-safedist){
+				return true;
+		}
+		return false;
+
 }
 
 double getAngleFromTo(string myPlayer, string player){
