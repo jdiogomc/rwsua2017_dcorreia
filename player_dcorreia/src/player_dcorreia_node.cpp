@@ -296,7 +296,7 @@ bool checkLimits(){
 		double x = transform.getOrigin().x();
     double y = transform.getOrigin().y();
 
-		double safedist = 2;
+		double safedist = 1.5;
 
 		if(abs(x) > 5-safedist  ||  abs(y) > 5-safedist){
 				return true;
