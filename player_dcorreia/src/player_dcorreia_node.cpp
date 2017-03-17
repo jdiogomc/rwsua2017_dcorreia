@@ -194,19 +194,10 @@ namespace rwsua2017{
 						angleC = M_PI/80;
 				}
 			}else{
-				double mindist = 1000000;
-				int idx = 0;
-				for(int i = 0; i< msg->red_alive.size();i++){
-					double dis = getDistFromTo(name, msg->red_alive[i]);
-					if(dis < mindist){
-							mindist = dis;
-							idx = i;
-					}
-				}
 			
 				if(msg->red_alive.size() > 0){
-					angleC = getAngleFromTo(name,msg->red_alive[idx]);
-					string texto = "Vou apanhar o " + msg->red_alive[idx];
+					angleC = getAngleFromTo(name,msg->red_alive[idxP]);
+					string texto = "Vou apanhar o " + msg->red_alive[idxP];
 					marker.text = texto;
 				}else{
 						angleC = MAX_ANGLE;
