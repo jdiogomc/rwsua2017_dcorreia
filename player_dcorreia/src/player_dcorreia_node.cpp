@@ -157,7 +157,7 @@ namespace rwsua2017{
 
 			//float turn_angle = M_PI/10;
 			float displacement = msg->max_displacement;
-
+			visualization_msgs::Marker marker;
 			
 
 			double dist[3];
@@ -176,6 +176,8 @@ namespace rwsua2017{
 			if(mindistH < safedist){
 					if(msg->green_alive.size() > 0){
 						angleC = -getAngleFromTo(name,msg->green_alive[idxH]);
+						string texto = "Vou apanhar o " + msg->green_alive[idxH];
+						marker.text = texto;
 					}else{
 						angleC = MAX_ANGLE;
 					}
@@ -192,14 +194,16 @@ namespace rwsua2017{
 			
 				if(msg->red_alive.size() > 0){
 					angleC = getAngleFromTo(name,msg->red_alive[idx]);
+					string texto = "Vou apanhar o " + msg->red_alive[idx];
+					marker.text = texto;
 					}else{
 						angleC = MAX_ANGLE;
 					}
 			}
 
+
 			move(displacement, angleC, displacement, MAX_ANGLE);
 
-			visualization_msgs::Marker marker;
 			marker.header.frame_id = name;
 			marker.header.stamp = ros::Time();
 			marker.ns = "dcorreia_namespace";
@@ -221,7 +225,7 @@ namespace rwsua2017{
 			marker.frame_locked = 1;
 			marker.lifetime = ros::Duration(1);
 
-			marker.text = "dnfd";
+			
 			vis_pub.publish( marker );
 
 	
