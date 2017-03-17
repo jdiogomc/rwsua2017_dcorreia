@@ -166,7 +166,7 @@ namespace rwsua2017{
 					}
 			}
 
-			int safedist = 1.5;
+			int safedist = 2;
 			double angleC;
 			if(mindistH < safedist){
 					if(msg->green_alive.size() > 0){
@@ -179,7 +179,7 @@ namespace rwsua2017{
 
 
 				if(checkLimits()){
-						angleC = M_PI/40;
+						angleC = M_PI/60;
 				}
 			}else{
 				double mindist = 1000000;
@@ -196,7 +196,7 @@ namespace rwsua2017{
 					angleC = getAngleFromTo(name,msg->red_alive[idx]);
 					string texto = "Vou apanhar o " + msg->red_alive[idx];
 					marker.text = texto;
-					}else{
+				}else{
 						angleC = MAX_ANGLE;
 					}
 			}
