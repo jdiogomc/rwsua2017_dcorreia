@@ -81,7 +81,7 @@ namespace rwsua2017{
 		ros::Subscriber sub;
 		tf::TransformBroadcaster br;
 
-		tf::Transform t1;
+
 		tf::TransformListener listener;
 /*
 		vector<string> red_team;
@@ -123,6 +123,7 @@ namespace rwsua2017{
 					cout << "I'm not in any team :(" << endl;
 			}
 */
+		tf::Transform t1;
 
 			t1.setOrigin(tf::Vector3(randNumber(),randNumber(),0));
 			tf::Quaternion q;
@@ -164,11 +165,26 @@ namespace rwsua2017{
 			tmov.setRotation(q);
 			tmov.setOrigin(tf::Vector3(displacement,0,0));
 
-			tf::Transform t = t1 * tmov;
+			tf::Transform t = getPose() * tmov;
 
-			br.sendTransform(tf::StampedTransform(t1, ros::Time::now(),"map",name));
-			t1 = t;
+			br.sendTransform(tf::StampedTransform(t, ros::Time::now(),"map",name));
 		}
+
+tf::StampedTransform getPose(){
+
+	tf::StampedTransform transform;
+
+	 try{
+     listener.lookupTransform("/map", name,
+															ros::Time(0),transform);
+    }
+    catch (tf::TransformException ex){
+      ROS_ERROR("%s",ex.what());
+      //ros::Duration(1.0).sleep();
+    }
+
+	return transform;
+}
 
 double getAngleFromTo(string myPlayer, string player){
 
