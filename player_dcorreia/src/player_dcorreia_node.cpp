@@ -152,22 +152,13 @@ namespace rwsua2017{
 		  cout << "received a makeAPlay msg" << endl;
 			cout << "max_dispalcemente: " << msg->max_displacement << endl; 
 
-			float turn_angle = M_PI/10;
+			//float turn_angle = M_PI/10;
 			float displacement = msg->max_displacement;
 
-			tf::Transform tmov;
-			tf::Quaternion q;
-			double angle = getAngleFromTo(name,"moliveira");
-			if(angle > MAX_ANGLE){ angle = MAX_ANGLE;}
-			if(angle < -MAX_ANGLE){ angle = -MAX_ANGLE;}
-			q.setRPY(0,0,angle);
+			double angle = getAngleFromTo(name,"bvieira");
 
-			tmov.setRotation(q);
-			tmov.setOrigin(tf::Vector3(displacement,0,0));
+			move(displacement, angle, displacement, MAX_ANGLE);
 
-			tf::Transform t = getPose() * tmov;
-
-			br.sendTransform(tf::StampedTransform(t, ros::Time::now(),"map",name));
 		}
 
 tf::StampedTransform getPose(float time_to_wait = 0.1){
@@ -208,6 +199,23 @@ double getAngleFromTo(string myPlayer, string player){
 		return anglle;
 }
 
+
+void move(float displacement, float turn_angle, int max_displacement, float max_turnAngle){
+			tf::Transform tmov;
+			tf::Quaternion q;
+			
+			if(turn_angle > MAX_ANGLE){ turn_angle = max_turnAngle;}
+			if(turn_angle < -MAX_ANGLE){ turn_angle = -max_turnAngle;}
+			q.setRPY(0,0,turn_angle);
+
+			tmov.setRotation(q);
+			tmov.setOrigin(tf::Vector3(displacement*1.1,0,0));
+
+			tf::Transform t = getPose() * tmov;
+
+			br.sendTransform(tf::StampedTransform(t, ros::Time::now(),"map",name));
+
+}
 /*
 		bool isMyTeam(vector<string> team, string teamName){
 				for(int i = 0; i<team.size();i++){
