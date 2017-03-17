@@ -179,7 +179,7 @@ namespace rwsua2017{
 
 
 				if(checkLimits()){
-						angleC = M_PI/60;
+						angleC = M_PI/80;
 				}
 			}else{
 				double mindist = 1000000;
@@ -298,7 +298,7 @@ bool checkLimits(){
 
 		double safedist = 1.5;
 
-		if(abs(x) > 5-safedist  ||  abs(y) > 5-safedist){
+		if(abs(x) > 5-safedist || abs(y) > 5-safedist){
 				return true;
 		}
 		return false;
