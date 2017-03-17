@@ -132,12 +132,9 @@ namespace rwsua2017{
 			t1.setRotation(q);
 			br.sendTransform(tf::StampedTransform(t1, ros::Time::now(),"map",name));
 
-		
-			cout << endl;
-
 			sub = n.subscribe("/make_a_play/dog",1000, &MyPlayer::makeAPlay,this);
 
-			cout << "Inicialized MyPlayer" << endl;
+			ROS_INFO_STREAM(endl << "Inicialized MyPlayer" );
 
 			vis_pub = n.advertise<visualization_msgs::Marker>( "/bocas", 0 );
 		}
@@ -146,14 +143,12 @@ namespace rwsua2017{
 
 		void printTeamMates(){
 		    for(size_t i = 0; i<teamMates.size(); i++){
-						cout << teamMates[i] << endl;
+						ROS_INFO_STREAM( teamMates[i] );
 		    }
 		}
 
 		void makeAPlay(const rwsua2017_msgs::MakeAPlay::ConstPtr& msg)
 		{
-		  cout << "received a makeAPlay msg" << endl;
-			cout << "max_dispalcemente: " << msg->max_displacement << endl; 
 
 			//float turn_angle = M_PI/10;
 			float displacement = msg->max_displacement;
@@ -176,7 +171,7 @@ namespace rwsua2017{
 			if(mindistH < safedist){
 					if(msg->green_alive.size() > 0){
 						angleC = -getAngleFromTo(name,msg->green_alive[idxH]);
-						string texto = "Vou apanhar o " + msg->green_alive[idxH];
+						string texto = "A ser apanhado por " + msg->green_alive[idxH];
 						marker.text = texto;
 					}else{
 						angleC = MAX_ANGLE;
@@ -301,7 +296,7 @@ bool checkLimits(){
 		double x = transform.getOrigin().x();
     double y = transform.getOrigin().y();
 
-		double safedist = 1.5;
+		double safedist = 2;
 
 		if(abs(x) > 5-safedist  ||  abs(y) > 5-safedist){
 				return true;
@@ -341,7 +336,7 @@ void move(float displacement, float turn_angle, int max_displacement, float max_
 			q.setRPY(0,0,turn_angle);
 
 			tmov.setRotation(q);
-			tmov.setOrigin(tf::Vector3(displacement*1.1,0,0));
+			tmov.setOrigin(tf::Vector3(displacement,0,0));
 
 			tf::Transform t = getPose() * tmov;
 
@@ -368,13 +363,13 @@ using namespace rwsua2017;
 int main(int argc, char **argv)
 {
 
-    ros::init(argc,argv,"player_dcorreia");
+    ros::init(argc,argv,"dcorreia");
 //Creating an instance of class Player
     MyPlayer player("dcorreia","blue");
     //player.setTeamName("red");
 
-    cout << "player.name is " << player.name << endl;
-    cout << "team is " << player.get_team_name() << endl;
+    ROS_INFO_STREAM("player.name is " << player.name );
+    ROS_INFO_STREAM("team is " << player.get_team_name() );
 
     player.teamMates.push_back("fsilva");
     player.teamMates.push_back("vsilva");
