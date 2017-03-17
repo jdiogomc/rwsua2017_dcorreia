@@ -158,23 +158,40 @@ namespace rwsua2017{
 			
 
 			double dist[3];
+			double mindistH = 100000;
+			int idxH = 0;
+			for(int i = 0; i< msg->green_alive.size();i++){
+				dist[i] = getDistFromTo(name, msg->green_alive[i]);
+				if(dist[i] < mindistH){
+							mindistH = dist[i];
+							idxH = i;
+					}
+			}
 
-			dist[0] = getDistFromTo(name, "rmartins");
-			dist[1] = getDistFromTo(name, "jferreira");
-			dist[2] = getDistFromTo(name, "fsilva");
-
-			int safedist = 1;
+			int safedist = 2;
 			double angleC;
-			if(dist[0] < safedist || dist[1] < safedist || dist[2] < safedist){
-				if(dist[0] < safedist){
-					angleC = -getAngleFromTo(name,"rmartins");
-				}else if(dist[1] < safedist){
-					angleC = -getAngleFromTo(name,"jferreira");
-				}else{
-						angleC = -getAngleFromTo(name,"fsilva");
-				}
+			if(mindistH < safedist){
+					if(msg->green_alive.size() > 0){
+						angleC = -getAngleFromTo(name,msg->green_alive[idxH]);
+					}else{
+						angleC = MAX_ANGLE;
+					}
 			}else{
-				angleC = getAngleFromTo(name,"bvieira");
+				double mindist = 1000000;
+				int idx = 0;
+				for(int i = 0; i< msg->red_alive.size();i++){
+					double dis = getDistFromTo(name, msg->red_alive[i]);
+					if(dis < mindist){
+							mindist = dis;
+							idx = i;
+					}
+				}
+			
+				if(msg->red_alive.size() > 0){
+					angleC = getAngleFromTo(name,msg->red_alive[idx]);
+					}else{
+						angleC = MAX_ANGLE;
+					}
 			}
 
 			move(displacement, angleC, displacement, MAX_ANGLE);
