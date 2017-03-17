@@ -18,6 +18,7 @@ int main()
 #include <tf/transform_listener.h>
 #include "std_msgs/String.h"
 #include <boost/make_shared.hpp>
+#include <visualization_msgs/Marker.h>
 
 
 #define MAX_ANGLE M_PI/30
@@ -80,7 +81,7 @@ namespace rwsua2017{
 		//ros::NodeHandle n;
 		ros::Subscriber sub;
 		tf::TransformBroadcaster br;
-
+		ros::Publisher vis_pub;
 
 		tf::TransformListener listener;
 /*
@@ -137,6 +138,8 @@ namespace rwsua2017{
 			sub = n.subscribe("/make_a_play/dog",1000, &MyPlayer::makeAPlay,this);
 
 			cout << "Inicialized MyPlayer" << endl;
+
+			vis_pub = n.advertise<visualization_msgs::Marker>( "/bocas", 0 );
 		}
 
 		vector<string> teamMates;
@@ -195,6 +198,33 @@ namespace rwsua2017{
 			}
 
 			move(displacement, angleC, displacement, MAX_ANGLE);
+
+			visualization_msgs::Marker marker;
+			marker.header.frame_id = name;
+			marker.header.stamp = ros::Time();
+			marker.ns = "dcorreia_namespace";
+			marker.id = 0;
+			marker.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
+			marker.action = visualization_msgs::Marker::ADD;
+			marker.pose.position.x = 0;
+			marker.pose.position.y = 0.4;
+			marker.pose.position.z = 0;
+			marker.pose.orientation.x = 0.0;
+			marker.pose.orientation.y = 0.0;
+			marker.pose.orientation.z = 0.0;
+			marker.pose.orientation.w = 1.0;
+			marker.scale.z = 0.4;
+			marker.color.a = 1.0; // Don't forget to set the alpha!
+			marker.color.r = 0.3;
+			marker.color.g = 0.3;
+			marker.color.b = 0.3;
+			marker.frame_locked = 1;
+			marker.lifetime = ros::Duration(1);
+
+			marker.text = "dnfd";
+			vis_pub.publish( marker );
+
+	
 
 		}
 
