@@ -170,13 +170,14 @@ namespace rwsua2017{
 			br.sendTransform(tf::StampedTransform(t, ros::Time::now(),"map",name));
 		}
 
-tf::StampedTransform getPose(){
+tf::StampedTransform getPose(float time_to_wait = 0.1){
 
 	tf::StampedTransform transform;
-
+	ros::Time now = ros::Time(0);
 	 try{
+			listener.waitForTransform("/map",name,now, ros::Duration(time_to_wait));
      listener.lookupTransform("/map", name,
-															ros::Time(0),transform);
+															now,transform);
     }
     catch (tf::TransformException ex){
       ROS_ERROR("%s",ex.what());
@@ -189,10 +190,12 @@ tf::StampedTransform getPose(){
 double getAngleFromTo(string myPlayer, string player){
 
 	tf::StampedTransform transform;
-
+	ros::Time now = ros::Time(0);
+	float time_to_wait = 0.1;
 	 try{
+			listener.waitForTransform("/map",name,now, ros::Duration(time_to_wait));
      listener.lookupTransform(myPlayer, player,
-															ros::Time(0),transform);
+															now,transform);
     }
     catch (tf::TransformException ex){
       ROS_ERROR("%s",ex.what());
